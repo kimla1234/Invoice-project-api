@@ -60,8 +60,8 @@ public class SecurityConfig {
                         //.requestMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
                         .requestMatchers("/api/v1/users/me").authenticated() // OR if you use roles:
 
-                        .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/events/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/**").authenticated()
+
 
                         .requestMatchers(HttpMethod.POST, "/api/v1/media/**").permitAll()
                         .requestMatchers("/media/**").permitAll()

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
@@ -40,5 +42,8 @@ public class User extends Auditable {
 
     private Boolean status = true;
     private Boolean isVerified = false;
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
 
 }

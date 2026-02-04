@@ -122,15 +122,6 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         return refreshJwtEncoder.encode(JwtEncoderParameters.from(refreshJwtClaimsSet)).getTokenValue();
     }
 
-    @Override
-    public String generateResetToken(String email, User user, Token token) {
-        return "";
-    }
-
-    @Override
-    public BaseMessage resetPassword(String token, String newPassword) {
-        return null;
-    }
 
     @Override
     public AuthResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
