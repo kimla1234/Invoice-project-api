@@ -51,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
 
             return Collections.emptyList();
         }
+        products.forEach(Product::updateStatusFromStock);
 
         return productMapper.toProductResponseList(products);
     }
@@ -83,10 +84,13 @@ public class ProductServiceImpl implements ProductService {
         // Stock ( quantity fromm request)
         Stocks stock = new Stocks();
         stock.setProduct(savedProduct);
+        stock.setLow_stock(request.low_stock());
         stock.setQuantity(request.quantity() != null ? request.quantity() : 0);
         stocksRepository.save(stock);
 
         savedProduct.setStock(stock);
+        // ៣. ឆែក Status ដោយស្វ័យប្រវត្តិ
+        product.updateStatusFromStock();
 
         return productMapper.toResponse(savedProduct);
     }
@@ -97,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
        product.setIsDeleted(true);
-       product.setStatus(false);
+       //product.setStatus(false);
        productRepository.save(product);
     }
 
@@ -106,6 +110,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
 
         return productMapper.toResponse(product);
     }

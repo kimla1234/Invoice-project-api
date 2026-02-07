@@ -1,7 +1,8 @@
 package invoice.com.demo.features.stocks;
 
 import invoice.com.demo.features.stocks.dto.StockRequest;
+import invoice.com.demo.features.stocks.dto.StockResponse;
 
 public interface StockService  {
-    void handleStockMovement(StockRequest request);
+    StockResponse handleStockMovement(StockRequest request);
 }

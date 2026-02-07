@@ -4,7 +4,8 @@ public record UserResponse(
         Long id ,
         String uuid,
         String name,
-        String email
+        String email,
+        String  image_profile
 
 ) {
 }

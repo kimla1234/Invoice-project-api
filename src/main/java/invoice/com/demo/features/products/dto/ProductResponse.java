@@ -1,5 +1,7 @@
 package invoice.com.demo.features.products.dto;
 
+import invoice.com.demo.domain.Currency;
+
 import java.math.BigDecimal;
 
 public record ProductResponse(
@@ -8,13 +10,15 @@ public record ProductResponse(
         String name,
         String imageUrl,
         BigDecimal price,
-        Boolean status,
-
+        Currency currency_type,
+        String status,
         // Product Type
         Long productTypeId,
         String productTypeName,
 
         Integer stockQuantity,
+        Integer low_stock,
+        String description,
 
         // Created By
         Long userId

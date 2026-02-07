@@ -7,6 +7,9 @@ public record ProductUpdateRequest(
         String image_url,
         BigDecimal price,
         Long productTypeId,
-        Boolean status
+        Boolean status,
+        Integer low_stock ,
+        String description,
+        Integer quantity
 ) {
 }

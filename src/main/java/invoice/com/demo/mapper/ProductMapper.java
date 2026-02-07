@@ -25,6 +25,8 @@ public interface ProductMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "image_url", target = "imageUrl")
     @Mapping(source = "stock.quantity", target = "stockQuantity")
+    @Mapping(source = "stock.low_stock", target = "low_stock")
+    @Mapping(target = "status", expression = "java(product.getStatus() != null ? product.getStatus().name() : \"OUT_STOCK\")")
     ProductResponse toResponse(Product product);
 
     List<ProductResponse> toProductResponseList(List<Product> products);

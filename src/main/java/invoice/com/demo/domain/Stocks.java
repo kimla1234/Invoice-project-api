@@ -23,4 +23,8 @@ public class Stocks  extends Auditable  {
     private Product product;
 
     private Integer quantity = 0;
+
+    private Integer low_stock = 0;
+
+
 }

@@ -1,6 +1,8 @@
 package invoice.com.demo.features.stocks;
 
+import invoice.com.demo.features.products.dto.ProductResponse;
 import invoice.com.demo.features.stocks.dto.StockRequest;
+import invoice.com.demo.features.stocks.dto.StockResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StockController {
     private final StockService stockService;
+
     @PostMapping("/movement")
-    public ResponseEntity<?> updateStock(@RequestBody StockRequest request) {
-        stockService.handleStockMovement(request);
-        return ResponseEntity.ok("Stock updated successfully");
+    public ResponseEntity<StockResponse> updateStock(@RequestBody StockRequest request) {
+        StockResponse response = stockService.handleStockMovement(request);
+        return ResponseEntity.ok(response); // return updated stock + movements
     }
+
 }

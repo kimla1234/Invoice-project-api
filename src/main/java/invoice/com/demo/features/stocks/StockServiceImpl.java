@@ -5,12 +5,16 @@ import invoice.com.demo.domain.StockMovements;
 import invoice.com.demo.domain.StockType;
 import invoice.com.demo.domain.Stocks;
 import invoice.com.demo.features.products.ProductRepository;
+import invoice.com.demo.features.stocks.dto.MovementDto;
 import invoice.com.demo.features.stocks.dto.StockRequest;
+import invoice.com.demo.features.stocks.dto.StockResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,13 +24,13 @@ public class StockServiceImpl implements StockService {
     private final StockMovementRepository stockMovementRepository;
     private final ProductRepository productRepository;
 
+
     @Override
     @Transactional
-    public void handleStockMovement(StockRequest request) {
-        // Check Product
+    public StockResponse handleStockMovement(StockRequest request) {
+        // Product and stock logic
         Product product = productRepository.findByUuid(request.productUuid())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-
 
         Stocks stock = product.getStock();
         int currentQty = stock.getQuantity();
@@ -44,17 +48,33 @@ public class StockServiceImpl implements StockService {
             case ADJUST -> inputQty;
         };
 
-        // Movement (Log)
+        // Save movement
         StockMovements movement = new StockMovements();
         movement.setProduct(product);
         movement.setType(movementType);
         movement.setQuantity(inputQty);
         movement.setNote(request.note());
-
         stockMovementRepository.save(movement);
+        stockMovementRepository.flush();
 
-        // Update Table Stocks
+        // Update stock
         stock.setQuantity(finalQty);
         stocksRepository.save(stock);
+
+        // Map movements to DTOs
+        List<MovementDto> movementDtos = stockMovementRepository.findByProduct(product)
+                .stream()
+                .map(m -> new MovementDto(
+                        m.getProduct().getUuid(),
+                        m.getType().name(),
+                        m.getQuantity(),
+                        m.getNote()
+                ))
+                .toList();
+
+
+        return new StockResponse(finalQty, movementDtos);
     }
+
+
 }
