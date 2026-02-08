@@ -21,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import invoice.com.demo.features.settings.SettingRepository;
+import invoice.com.demo.domain.Setting;
 
 import java.util.UUID;
 
@@ -35,6 +37,8 @@ public class AuthServiceImpl implements AuthService {
     private final TokenRepository tokenRepository;
     private final AuthTokenService authTokenService;
     private final DaoAuthenticationProvider daoAuthenticationProvider;
+    private final SettingRepository settingRepository;
+
 
 
     @Transactional
@@ -68,8 +72,14 @@ public class AuthServiceImpl implements AuthService {
         user.setIsDelete(false);
         user.setIsVerified(false);
 
-        userRepository.save(user);
-        userRepository.flush();
+        User savedUser = userRepository.save(user);
+
+        // 🔑 CREATE SETTING HERE
+        Setting setting = new Setting();
+        setting.setUser(savedUser);
+        settingRepository.save(setting);
+       // userRepository.save(user);
+       //userRepository.flush();
 
         return BaseMessage.builder()
                 .message("Registered Successfully")

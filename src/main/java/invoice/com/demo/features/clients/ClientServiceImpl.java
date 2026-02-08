@@ -26,7 +26,6 @@ public class ClientServiceImpl implements ClientService{
 
         User user =getCurrentUser();
 
-
         Client client = new Client();
         client.setName(request.name());
         client.setGender(request.gender());
