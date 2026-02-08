@@ -1,8 +1,11 @@
 package invoice.com.demo.features.users;
 
+import invoice.com.demo.domain.Setting;
 import invoice.com.demo.domain.User;
+import invoice.com.demo.features.settings.SettingRepository;
 import invoice.com.demo.features.users.dto.UserResponse;
 import invoice.com.demo.mapper.userMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -14,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final userMapper userMapper ;
+
     @Override
     public UserResponse findOwnProfile(Jwt jwt) {
 
