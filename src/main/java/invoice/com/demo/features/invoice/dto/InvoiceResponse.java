@@ -9,6 +9,7 @@ public record InvoiceResponse (
         Long id,
         Long userId,
         Long clientId,
+        String status,
         double subtotal,
         double grandTotal,
         double tax,

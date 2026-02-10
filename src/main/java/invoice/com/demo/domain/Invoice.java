@@ -32,6 +32,9 @@ public class Invoice {
     @Column(name ="subtotal")
     private double subtotal;
 
+    @Column(name= "status", nullable = true)
+    private String status;
+
     @Column(name = "grand_total")
     private double grandTotal;
 

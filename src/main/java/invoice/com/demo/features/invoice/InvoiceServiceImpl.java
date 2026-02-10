@@ -46,6 +46,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = invoiceMapper.toEntity(request);
         invoice.setClient(client);
         invoice.setUser(user);
+        invoice.setStatus("pending");
 
         // Add items
         if (request.items() != null) {
