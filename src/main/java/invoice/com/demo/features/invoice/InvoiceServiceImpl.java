@@ -12,6 +12,10 @@ import invoice.com.demo.features.users.UserRepository;
 import invoice.com.demo.mapper.InvoiceItemMapper;
 import invoice.com.demo.mapper.InvoiceMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -79,15 +83,16 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<List<InvoiceResponse>> getAll(Jwt jwt) {
+    public ResponseEntity<Page<InvoiceResponse>> getAll(Jwt jwt, int page, int size) {
         User currentUser = getUser(jwt);
 
-        // Get invoices only for the current user
-        List<Invoice> invoices = invoiceRepository.findAllByUser(currentUser);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        return ResponseEntity.ok(invoices.stream()
-                .map(invoiceMapper::toResponse)
-                .collect(Collectors.toList()));
+        Page<Invoice> invoicesPage = invoiceRepository.findAllByUser(currentUser, pageable);
+
+        Page<InvoiceResponse> responsePage = invoicesPage.map(invoiceMapper::toResponse);
+
+        return ResponseEntity.ok(responsePage);
     }
 
     @Override

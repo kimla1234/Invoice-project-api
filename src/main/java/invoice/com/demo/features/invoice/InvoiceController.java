@@ -6,6 +6,7 @@ import invoice.com.demo.features.invoiceitems.dto.InvoiceItemRequest;
 import invoice.com.demo.features.products.dto.ProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,8 +35,11 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InvoiceResponse>> getAll(@AuthenticationPrincipal Jwt jwt) {
-        return invoiceService.getAll(jwt);
+    public ResponseEntity<Page<InvoiceResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal Jwt jwt) {
+        return invoiceService.getAll(jwt, page, size);
     }
 
     @PutMapping("/{id}")
