@@ -64,7 +64,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 item.setUnitPrice(itemDto.unitPrice());
                 item.setQuantity(itemDto.quantity());
                 item.setSubtotal(itemDto.subtotal());
-
+                item.setName(product.getName());
                 invoice.addItem(item);  // Use helper
             }
         }
@@ -149,13 +149,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public ResponseEntity<String> removeItem(Long id, Long itemId) {
         Optional<Invoice> invoiceOpt = invoiceRepository.findById(id);
-        if(invoiceOpt.isEmpty()){
+        if (invoiceOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         Invoice invoice = invoiceOpt.get();
         Optional<InvoiceItem> itemOpt = invoiceItemRepository.findById(itemId);
-        if(itemOpt.isEmpty()){
+        if (itemOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -168,12 +168,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public ResponseEntity<InvoiceResponse> addItem(Long id, InvoiceItemRequest invoiceItemRequest) {
         Optional<Invoice> invoiceOpt = invoiceRepository.findById(id);
-        if(invoiceOpt.isEmpty()){
+        if (invoiceOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         Optional<Product> productOpt = productRepository.findById(invoiceItemRequest.productId().toString());
-        if(productOpt.isEmpty()){
+        if (productOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 

@@ -4,6 +4,7 @@ public record InvoiceItemResponse(
         Long id,
         Long invoiceId,
         Long productId,
+        String name,
         double unitPrice,
         double quantity,
         double subtotal,
