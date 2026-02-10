@@ -13,6 +13,7 @@ public record InvoiceRequest (
         double subtotal,
         double tax,
         double grandTotal,
+        String status,
         List<InvoiceItemRequest> items  // ← Add this
 
 ) {}

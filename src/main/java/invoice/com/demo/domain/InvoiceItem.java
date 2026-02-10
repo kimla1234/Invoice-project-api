@@ -38,7 +38,7 @@ public class InvoiceItem {
     private double quantity;
 
     @Column(name = "subtotal")
-    private double subTotal;
+    private double subtotal;
 //
 //    @OneToOne
 //    @JoinColumn(name = "quote_id", nullable = true)

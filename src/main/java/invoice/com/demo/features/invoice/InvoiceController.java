@@ -31,6 +31,7 @@ public class InvoiceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<InvoiceResponse> getById(@PathVariable Long id) {
+
         return invoiceService.getById(id);
     }
 

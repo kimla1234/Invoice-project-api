@@ -60,9 +60,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
                 InvoiceItem item = new InvoiceItem();
                 item.setProduct(product);
+                item.setInvoice(invoice);
                 item.setUnitPrice(itemDto.unitPrice());
                 item.setQuantity(itemDto.quantity());
-                item.setSubTotal(itemDto.subtotal());
+                item.setSubtotal(itemDto.subtotal());
 
                 invoice.addItem(item);  // Use helper
             }
@@ -108,8 +109,28 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.setClient(client);
         }
 
-        // Update other fields using mapper
-        invoiceMapper.toEntity(request);
+        // Update invoice fields
+        invoice.setSubtotal(request.subtotal());
+        invoice.setTax(request.tax());
+        invoice.setGrandTotal(request.grandTotal());
+        invoice.setStatus(request.status());
+
+        // Update items - remove old items and add new ones
+        invoice.getItems().clear();
+
+        if (request.items() != null) {
+            for (InvoiceItemRequest itemDto : request.items()) {
+                Product product = productRepository.findById(itemDto.productId().toString())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+                InvoiceItem item = new InvoiceItem();
+                item.setProduct(product);
+                item.setUnitPrice(itemDto.unitPrice());
+                item.setQuantity(itemDto.quantity());
+                item.setSubtotal(itemDto.subtotal());
+                invoice.addItem(item);
+            }
+        }
 
         Invoice updated = invoiceRepository.save(invoice);
         return ResponseEntity.ok(invoiceMapper.toResponse(updated));

@@ -1,6 +1,7 @@
 package invoice.com.demo.features.invoice.dto;
 
 import invoice.com.demo.domain.InvoiceItem;
+import invoice.com.demo.features.invoiceitems.dto.InvoiceItemResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,5 +16,5 @@ public record InvoiceResponse (
         double tax,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        List<InvoiceItem> items
+        List<InvoiceItemResponse> items
 ) {}

@@ -6,7 +6,9 @@ public record InvoiceItemResponse(
         Long productId,
         double unitPrice,
         double quantity,
-        double subtotal
+        double subtotal,
+        String createdAt,
+        String updatedAt
 ) {
 }
 
