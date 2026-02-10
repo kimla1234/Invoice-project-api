@@ -5,11 +5,14 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import invoice.com.demo.security.oauth2.CustomOAuth2UserService;
+import invoice.com.demo.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import invoice.com.demo.utils.KeyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,12 +33,25 @@ import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final KeyUtil keyUtil;
-
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oauth2SuccessHandler;
+    // ប្រើ Constructor រួមជាមួយ @Lazy សម្រាប់ SuccessHandler
+    public SecurityConfig(UserDetailsService userDetailsService,
+                          PasswordEncoder passwordEncoder,
+                          KeyUtil keyUtil,
+                          CustomOAuth2UserService customOAuth2UserService,
+                          @Lazy OAuth2AuthenticationSuccessHandler oauth2SuccessHandler) { // ថែម @Lazy នៅទីនេះ
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.keyUtil = keyUtil;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.oauth2SuccessHandler = oauth2SuccessHandler;
+    }
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         // Inject userDetailsService directly into the constructor to resolve the IDE error
@@ -52,10 +68,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .securityMatcher("/api/v1/**")
+                .securityMatcher("/api/v1/**", "/login/**", "/oauth2/**")
                 .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/login/**", "/oauth2/**").permitAll()
 
                         //.requestMatchers(HttpMethod.GET,"/api/v1/users/**").authenticated()
                         .requestMatchers("/api/v1/users/me").authenticated() // OR if you use roles:
@@ -75,7 +93,11 @@ public class SecurityConfig {
                         .requestMatchers("/v1/video/**").permitAll()
 
                         .anyRequest().authenticated()
-                );
+                )
+        .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                .successHandler(oauth2SuccessHandler)
+        );
         // enable jwt security
         httpSecurity.oauth2ResourceServer(jwt -> jwt
                 .jwt(Customizer.withDefaults()));
