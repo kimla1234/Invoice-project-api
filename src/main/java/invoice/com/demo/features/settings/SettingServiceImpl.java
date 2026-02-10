@@ -120,9 +120,6 @@ public class SettingServiceImpl implements SettingService {
         if (request.name() != null) {
             user.setName(request.name());
         }
-        if (request.email() != null) {
-            user.setEmail(request.email());
-        }
 
         if (request.phoneNumber() != null) {
             user.setPhone_number(request.phoneNumber());

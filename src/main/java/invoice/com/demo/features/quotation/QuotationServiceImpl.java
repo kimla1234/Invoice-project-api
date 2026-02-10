@@ -21,61 +21,62 @@ public class QuotationServiceImpl implements QuotationService {
 
     @Override
     public QuotationResponse createQuotation(QuotationCreateRequest request) {
-        Quotation quotation = new Quotation();
-        quotation.setUserId(request.getUserId());
-        quotation.setClientId(request.getClientId());
-        quotation.setInvoiceId(request.getInvoiceId());
-        quotation.setQuotationDate(request.getQuotationDate());
-        quotation.setQuotationExpire(request.getQuotationExpire());
-        quotation.setCreatedAt(LocalDateTime.now());
-
-        double totalAmount = 0;
-
-        for (QuotationItemRequest itemRequest : request.getItems()) {
-            QuotationItem quotationItem = new QuotationItem();
-            quotationItem.setQuotation(quotation);
-            quotationItem.setProductId(itemRequest.getProductId());
-            quotationItem.setQuantity(itemRequest.getQuantity());
-            quotationItem.setUnitPrice(itemRequest.getUnitPrice());
-
-            double lineTotal = itemRequest.getQuantity() * itemRequest.getUnitPrice();
-            itemRequest.setLineTotal(lineTotal);
-
-            totalAmount += lineTotal;
-            quotation.getItem().add(quotationItem);
-        }
-        quotation.setTotalAmount(totalAmount);
-        return mapToResponse(quotation);
+//        Quotation quotation = new Quotation();
+//        quotation.setUserId(request.getUserId());
+//        quotation.setClientId(request.getClientId());
+//        quotation.setInvoiceId(request.getInvoiceId());
+//        quotation.setQuotationDate(request.getQuotationDate());
+//        quotation.setQuotationExpire(request.getQuotationExpire());
+//        quotation.setCreatedAt(LocalDateTime.now());
+//
+//        double totalAmount = 0;
+//
+//        for (QuotationItemRequest itemRequest : request.getItems()) {
+//            QuotationItem quotationItem = new QuotationItem();
+//            quotationItem.setQuotation(quotation);
+//            quotationItem.setProductId(itemRequest.getProductId());
+//            quotationItem.setQuantity(itemRequest.getQuantity());
+//            quotationItem.setUnitPrice(itemRequest.getUnitPrice());
+//
+//            double lineTotal = itemRequest.getQuantity() * itemRequest.getUnitPrice();
+//            itemRequest.setLineTotal(lineTotal);
+//
+//            totalAmount += lineTotal;
+//            quotation.getItem().add(quotationItem);
+//        }
+//        quotation.setTotalAmount(totalAmount);
+//        return mapToResponse(quotation);
+        return null;
     }
 
 
-    private QuotationResponse mapToResponse(Quotation quotation) {
-
-        QuotationResponse res = new QuotationResponse();
-        res.setId(quotation.getId());
-        res.setUserId(quotation.getUserId());
-        res.setClientId(quotation.getClientId());
-        res.setInvoiceId(quotation.getInvoiceId());
-        res.setQuotationDate(quotation.getQuotationDate());
-        res.setQuotationExpire(quotation.getQuotationExpire());
-        res.setTotalAmount(quotation.getTotalAmount());
-        res.setCreatedAt(quotation.getCreatedAt());
-        res.setUpdatedAt(quotation.getUpdatedAt());
-
-        List<QuotationItemResponse> items = quotation.getItem().stream()
-                .map(item -> {
-                    QuotationItemResponse ir = new QuotationItemResponse();
-                    ir.setId(item.getId());
-                    ir.setQuotationId(quotation.getId());
-                    ir.setProductId(item.getProductId());
-                    ir.setQuantity(item.getQuantity());
-                    ir.setUnitPrice(item.getUnitPrice());
-                    ir.setLineTotal(item.getLineTotal());
-                    return ir;
-                }).toList();
-        res.setItems(items);
-        return res;
-    }
+//    private QuotationResponse mapToResponse(Quotation quotation) {
+//
+//        QuotationResponse res = new QuotationResponse();
+//        res.setId(quotation.getId());
+//        res.setUserId(quotation.getUserId());
+//        res.setClientId(quotation.getClientId());
+//        res.setInvoiceId(quotation.getInvoiceId());
+//        res.setQuotationDate(quotation.getQuotationDate());
+//        res.setQuotationExpire(quotation.getQuotationExpire());
+//        res.setTotalAmount(quotation.getTotalAmount());
+//        res.setCreatedAt(quotation.getCreatedAt());
+//        res.setUpdatedAt(quotation.getUpdatedAt());
+//
+//        List<QuotationItemResponse> items = quotation.getItem().stream()
+//                .map(item -> {
+//                    QuotationItemResponse ir = new QuotationItemResponse();
+//                    ir.setId(item.getId());
+//                    ir.setQuotationId(quotation.getId());
+//                    ir.setProductId(item.getProductId());
+//                    ir.setQuantity(item.getQuantity());
+//                    ir.setUnitPrice(item.getUnitPrice());
+//                    ir.setLineTotal(item.getLineTotal());
+//                    return ir;
+//                }).toList();
+//        res.setItems(items);
+//        return res;
+//    }
 
 
     @Override
