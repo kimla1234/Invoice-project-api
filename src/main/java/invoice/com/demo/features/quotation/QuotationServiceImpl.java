@@ -73,7 +73,7 @@ public class QuotationServiceImpl implements QuotationService {
                     ir.setLineTotal(item.getLineTotal());
                     return ir;
                 }).toList();
-        res.setItems(items);
+        //res.setItems(items);
         return res;
     }
 
