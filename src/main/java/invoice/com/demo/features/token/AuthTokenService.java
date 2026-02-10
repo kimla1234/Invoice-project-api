@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 public interface AuthTokenService {
     AuthResponse createToken(Authentication authentication);
 
-    String createAccessToken(Authentication authentication);
+    String createAccessToken(String email,Authentication authentication);
 
     String createRefreshToken(Authentication authentication);
 

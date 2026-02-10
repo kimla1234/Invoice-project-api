@@ -16,6 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import invoice.com.demo.utils.PasswordValidator;
 import invoice.com.demo.base.BaseMessage;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -182,5 +190,149 @@ public class SettingServiceImpl implements SettingService {
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+    @Override
+    @Transactional
+    public SettingResponse uploadSignature(MultipartFile file) {
+
+        User user = getCurrentUser();
+
+        Setting setting = settingRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Setting not found"));
+
+        if (file.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Signature file is required"
+            );
+        }
+
+        try {
+            String uploadDir = "uploads/signatures/";
+            Files.createDirectories(Paths.get(uploadDir));
+
+            String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir + filename);
+
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // URL that frontend can use
+            String fileUrl = "/uploads/signatures/" + filename;
+
+            setting.setSignatureUrl(fileUrl);
+            settingRepository.save(setting);
+
+            return new SettingResponse(
+                    user.getId(),
+                    setting.getInvoiceFooter(),
+                    setting.getInvoiceNote(),
+                    fileUrl,
+                    setting.getCompanyName(),
+                    setting.getCompanyPhoneNumber(),
+                    setting.getCompanyEmail(),
+                    setting.getCompanyAddress(),
+                    setting.getCompanyLogoUrl()
+            );
+
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Failed to upload signature"
+            );
+        }
+    }
+    @Override
+    public UserResponse getMyProfile() {
+        User user = getCurrentUser();
+        return userMapper.mapFromUserToUserResponse(user);
+    }
+    @Override
+    @Transactional
+    public UserResponse uploadProfileImage(MultipartFile file) {
+
+        User user = getCurrentUser();
+
+        if (file.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Profile image is required"
+            );
+        }
+
+        try {
+            // folder: uploads/profile/
+            String uploadDir = "uploads/profile/";
+            Files.createDirectories(Paths.get(uploadDir));
+
+            String filename =
+                    UUID.randomUUID() + "-" + file.getOriginalFilename();
+
+            Path filePath = Paths.get(uploadDir + filename);
+
+            Files.copy(
+                    file.getInputStream(),
+                    filePath,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            // store ONLY URL in DB
+            String fileUrl = "/uploads/profile/" + filename;
+
+            user.setImage_profile(fileUrl);
+            userRepository.save(user);
+
+            return userMapper.mapFromUserToUserResponse(user);
+
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Failed to upload profile image"
+            );
+        }
+    }
+    @Override
+    @Transactional
+    public SettingResponse uploadCompanyLogo(MultipartFile file) {
+
+        User user = getCurrentUser();
+
+        if (file.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Company logo is required"
+            );
+        }
+
+        try {
+            String uploadDir = "uploads/company/";
+            Files.createDirectories(Paths.get(uploadDir));
+
+            String filename =
+                    UUID.randomUUID() + "-" + file.getOriginalFilename();
+
+            Path filePath = Paths.get(uploadDir + filename);
+
+            Files.copy(
+                    file.getInputStream(),
+                    filePath,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            String fileUrl = "/uploads/company/" + filename;
+
+            Setting setting = settingRepository.findByUser(user)
+                    .orElseThrow(() -> new RuntimeException("Setting not found"));
+
+            setting.setCompanyLogoUrl(fileUrl);
+            settingRepository.save(setting);
+
+            return getMySettings();
+
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Failed to upload company logo"
+            );
+        }
     }
 }

@@ -15,8 +15,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // This maps http://localhost:8081/media/IMAGE/your-file.jpg
         // to the physical folder on your computer
-        registry.addResourceHandler("/media/**")
-                .addResourceLocations("file:" + serverPath);
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:uploads/");
     }
 
     @Override
@@ -27,4 +27,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true); // បើគ្មានបន្ទាត់នេះទេ នឹងជាប់ CORS និង 401 រហូត
     }
+
 }

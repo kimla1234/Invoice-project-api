@@ -34,7 +34,7 @@ dependencies {
 
 	// OAuth2 / JWT
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	// Database
 	runtimeOnly 'org.postgresql:postgresql'
 

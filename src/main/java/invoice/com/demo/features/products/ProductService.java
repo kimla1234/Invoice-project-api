@@ -15,7 +15,7 @@ public interface ProductService  {
     ProductResponse createProduct(ProductRequest request , Jwt jwt);
     void deleteProductByUuid(String uuid);
     ProductResponse getProductByUuid(String uuid);
-
     ProductResponse updateProductByUuid(String uuid , @Valid ProductUpdateRequest productUpdateRequest );
+
 
 }

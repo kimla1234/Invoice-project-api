@@ -5,8 +5,8 @@ public record UserResponse(
         String uuid,
         String name,
         String email,
-        String phone_number,
-        String  image_profile
+        String phoneNumber,
+        String imageProfile
 
 ) {
 }

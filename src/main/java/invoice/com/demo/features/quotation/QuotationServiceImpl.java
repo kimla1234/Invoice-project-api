@@ -50,6 +50,7 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
 
+
 //    private QuotationResponse mapToResponse(Quotation quotation) {
 //
 //        QuotationResponse res = new QuotationResponse();
@@ -77,6 +78,35 @@ public class QuotationServiceImpl implements QuotationService {
 //        res.setItems(items);
 //        return res;
 //    }
+
+    private QuotationResponse mapToResponse(Quotation quotation) {
+
+        QuotationResponse res = new QuotationResponse();
+        res.setId(quotation.getId());
+        res.setUserId(quotation.getUserId());
+        res.setClientId(quotation.getClientId());
+        res.setInvoiceId(quotation.getInvoiceId());
+        res.setQuotationDate(quotation.getQuotationDate());
+        res.setQuotationExpire(quotation.getQuotationExpire());
+        res.setTotalAmount(quotation.getTotalAmount());
+        res.setCreatedAt(quotation.getCreatedAt());
+        res.setUpdatedAt(quotation.getUpdatedAt());
+
+        List<QuotationItemResponse> items = quotation.getItem().stream()
+                .map(item -> {
+                    QuotationItemResponse ir = new QuotationItemResponse();
+                    ir.setId(item.getId());
+                    ir.setQuotationId(quotation.getId());
+                    ir.setProductId(item.getProductId());
+                    ir.setQuantity(item.getQuantity());
+                    ir.setUnitPrice(item.getUnitPrice());
+                    ir.setLineTotal(item.getLineTotal());
+                    return ir;
+                }).toList();
+        //res.setItems(items);
+        return res;
+    }
+
 
 
     @Override
