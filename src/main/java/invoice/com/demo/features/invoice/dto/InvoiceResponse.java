@@ -1,13 +1,9 @@
 package invoice.com.demo.features.invoice.dto;
 
-import invoice.com.demo.domain.Client;
-import invoice.com.demo.domain.User;
-import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import invoice.com.demo.domain.InvoiceItem;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record InvoiceResponse (
         Long id,
@@ -17,5 +13,6 @@ public record InvoiceResponse (
         double grandTotal,
         double tax,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        List<InvoiceItem> items
 ) {}

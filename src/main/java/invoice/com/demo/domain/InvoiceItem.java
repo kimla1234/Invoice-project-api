@@ -1,10 +1,12 @@
 package invoice.com.demo.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -12,17 +14,21 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "invoice_items")
+@EntityListeners(AuditingEntityListener.class)  // ← ADD THIS
 @Data
-public class InvoiceItems {
+public class InvoiceItem {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "invoice_id")
+    @JsonIgnore
     private Invoice invoice;
 
     @OneToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
     @Column(name = "unit_price")
