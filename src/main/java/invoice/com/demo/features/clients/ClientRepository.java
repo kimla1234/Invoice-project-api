@@ -10,7 +10,9 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client>findByUser(User user);
     Optional<Client> findByIdAndUser(Long id, User user);
+    Optional<Client> findById(Long id);
 
     List<Client> findByUserAndDeletedAtIsNull(User user);
     Optional<Client> findByIdAndUserAndDeletedAtIsNull(Long id, User user);
+
 }
