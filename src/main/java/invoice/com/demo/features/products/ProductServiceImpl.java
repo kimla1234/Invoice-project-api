@@ -100,6 +100,7 @@ public class ProductServiceImpl implements ProductService {
        Product product = productRepository.findByUuid(uuid)
                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
+
        product.setIsDeleted(true);
        //product.setStatus(false);
        productRepository.save(product);
@@ -126,7 +127,19 @@ public class ProductServiceImpl implements ProductService {
         // Update Product
         if (productUpdateRequest.name() != null) product.setName(productUpdateRequest.name());
         if (productUpdateRequest.price() != null) product.setPrice(productUpdateRequest.price());
+        if (productUpdateRequest.currency_type() != null) product.setCurrency_type(productUpdateRequest.currency_type());
         if (productUpdateRequest.image_url() != null) product.setImage_url(productUpdateRequest.image_url());
+        if (productUpdateRequest.description() != null)
+            product.setDescription(productUpdateRequest.description());
+        if (productUpdateRequest.low_stock() != null) {
+            if (product.getStock() == null) {
+                Stocks stock = new Stocks();
+                stock.setProduct(product);
+                product.setStock(stock);
+            }
+            product.getStock().setLow_stock(productUpdateRequest.low_stock());
+        }
+
 
         return productMapper.toResponse(productRepository.save(product));
     }

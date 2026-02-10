@@ -8,7 +8,7 @@ public record ProductResponse(
         Long id,
         String uuid,
         String name,
-        String imageUrl,
+        String image_url,
         BigDecimal price,
         Currency currency_type,
         String status,

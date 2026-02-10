@@ -68,13 +68,39 @@ public class StockServiceImpl implements StockService {
                         m.getProduct().getUuid(),
                         m.getType().name(),
                         m.getQuantity(),
-                        m.getNote()
+                        m.getNote(),
+                        m.getCreatedAt()
                 ))
                 .toList();
 
 
         return new StockResponse(finalQty, movementDtos);
     }
+
+    @Override
+    public List<MovementDto> getMovementByProductsUuid(String productUUid) {
+
+        // Product and stock logic
+        Product product = productRepository.findByUuid(productUUid)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Product not found"
+                ));
+
+        List<MovementDto> movementDtos = stockMovementRepository.findByProductOrderByCreatedAtDesc(product)
+                .stream()
+                .map(m -> new MovementDto(
+                        m.getProduct().getUuid(),
+                        m.getType().name(),
+                        m.getQuantity(),
+                        m.getNote(),
+                        m.getCreatedAt()
+                ))
+                .toList();
+
+        return movementDtos; // ✅ return correct list
+    }
+
 
 
 }

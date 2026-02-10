@@ -23,7 +23,7 @@ public interface ProductMapper {
     @Mapping(source = "productType.id", target = "productTypeId")
     @Mapping(source = "productType.name", target = "productTypeName")
     @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "image_url", target = "imageUrl")
+    @Mapping(source = "image_url", target = "image_url")
     @Mapping(source = "stock.quantity", target = "stockQuantity")
     @Mapping(source = "stock.low_stock", target = "low_stock")
     @Mapping(target = "status", expression = "java(product.getStatus() != null ? product.getStatus().name() : \"OUT_STOCK\")")

@@ -27,6 +27,7 @@ public class StockMovements extends Auditable {
 
     private Integer quantity;
 
+    @Column(name = "note")
     private String note;
 
     private Long createdBy;
