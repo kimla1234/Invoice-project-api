@@ -1,9 +1,6 @@
 package invoice.com.demo.features.products;
 
-import invoice.com.demo.domain.Product;
-import invoice.com.demo.features.products.dto.ProductRequest;
-import invoice.com.demo.features.products.dto.ProductResponse;
-import invoice.com.demo.features.products.dto.ProductUpdateRequest;
+import invoice.com.demo.features.products.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final ProductTypeService productTypeService;
 
     @GetMapping
     public List<ProductResponse> getAllProducts() {
@@ -47,6 +45,14 @@ public class ProductController {
     @PatchMapping("/{uuid}")
     public ProductResponse updateProduct(@PathVariable String uuid, @RequestBody ProductUpdateRequest productUpdateRequest) {
         return  productService.updateProductByUuid(uuid , productUpdateRequest);
+    }
+
+
+    // Product Type
+
+    @PostMapping("/type")
+    public ProductTypeResponse createProductType(@RequestBody ProductTypeRequest productTypeRequest , @AuthenticationPrincipal Jwt jwt) {
+        return productTypeService.createProductType(productTypeRequest,jwt);
     }
 
 

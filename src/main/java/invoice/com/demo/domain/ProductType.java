@@ -25,4 +25,9 @@ public class ProductType extends Auditable {
     // One type → many products
     @OneToMany(mappedBy = "productType", fetch = FetchType.LAZY)
     private List<Product> products;
+
+    // The creator of this product type
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
