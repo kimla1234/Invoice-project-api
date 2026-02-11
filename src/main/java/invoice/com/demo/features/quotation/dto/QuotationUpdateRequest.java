@@ -7,11 +7,9 @@ import java.util.List;
 
 @Data
 public class QuotationUpdateRequest {
-
     private Long id;
     private Long userId;
     private Long clientId;
-
     private LocalDateTime quotationDate;
     private LocalDateTime quotationExpire;
 

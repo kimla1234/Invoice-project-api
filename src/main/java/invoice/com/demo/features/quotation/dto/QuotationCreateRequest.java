@@ -14,5 +14,4 @@ public class QuotationCreateRequest {
     private LocalDateTime quotationExpire;
 
     private List<QuotationItemRequest> items;
-
 }
