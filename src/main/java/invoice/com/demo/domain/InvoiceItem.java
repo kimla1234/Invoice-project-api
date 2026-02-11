@@ -31,6 +31,9 @@ public class InvoiceItem {
     @JsonIgnore
     private Product product;
 
+    @Column(name = "name", nullable = true)
+    private String name;
+
     @Column(name = "unit_price")
     private double unitPrice;
 

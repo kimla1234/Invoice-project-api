@@ -41,6 +41,12 @@ public class Invoice {
     @Column(name = "tax")
     private double tax;
 
+    @Column(nullable = true)
+    private LocalDateTime issueDate;
+
+    @Column(nullable = true)
+    private LocalDateTime expireDate;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
