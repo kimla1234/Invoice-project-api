@@ -139,6 +139,12 @@ public class ProductServiceImpl implements ProductService {
             }
             product.getStock().setLow_stock(productUpdateRequest.low_stock());
         }
+        // 4. កែសម្រួលត្រង់នេះ៖ ទាញយក ProductType Object មកប្រើ
+        if (productUpdateRequest.productTypeId() != null) {
+            ProductType productType = productTypeRepository.findById(productUpdateRequest.productTypeId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type not found"));
+            product.setProductType(productType); // ដាក់ Object ចូល មិនមែនដាក់ ID ទេ
+        }
 
 
         return productMapper.toResponse(productRepository.save(product));

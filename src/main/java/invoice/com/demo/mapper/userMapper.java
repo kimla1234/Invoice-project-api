@@ -13,5 +13,5 @@ public interface userMapper {
     UserResponse mapFromUserToUserResponse(User user);
 
 
-
+    UserResponse toUserResponse(User updatedUser);
 }
