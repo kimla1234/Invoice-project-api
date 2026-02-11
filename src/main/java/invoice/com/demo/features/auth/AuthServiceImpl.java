@@ -1,6 +1,7 @@
 package invoice.com.demo.features.auth;
 
 import invoice.com.demo.base.BaseMessage;
+import invoice.com.demo.domain.Role;
 import invoice.com.demo.domain.User;
 import invoice.com.demo.features.auth.dto.AuthResponse;
 import invoice.com.demo.features.auth.dto.LoginRequest;
@@ -8,6 +9,7 @@ import invoice.com.demo.features.auth.dto.RefreshTokenRequest;
 import invoice.com.demo.features.auth.dto.RegisterRequest;
 import invoice.com.demo.features.token.AuthTokenService;
 import invoice.com.demo.features.token.TokenRepository;
+import invoice.com.demo.features.users.RoleRepository;
 import invoice.com.demo.features.users.UserRepository;
 import invoice.com.demo.mapper.AuthMapper;
 import invoice.com.demo.utils.PasswordValidator;
@@ -24,6 +26,8 @@ import org.springframework.web.server.ResponseStatusException;
 import invoice.com.demo.features.settings.SettingRepository;
 import invoice.com.demo.domain.Setting;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthTokenService authTokenService;
     private final DaoAuthenticationProvider daoAuthenticationProvider;
     private final SettingRepository settingRepository;
+    private final RoleRepository roleRepository;
 
 
 
@@ -72,7 +77,19 @@ public class AuthServiceImpl implements AuthService {
         user.setIsDelete(false);
         user.setIsVerified(false);
 
+        // set default role USER when create user
+        List<Role> roleList = new ArrayList<>();
+        Role role = roleRepository.findByName("USER")
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "User role does not exist!"
+                ));
+
+        roleList.add(role);
+        user.setRoles(roleList);
+
         User savedUser = userRepository.save(user);
+
 
         // 🔑 CREATE SETTING HERE
         Setting setting = new Setting();
@@ -80,6 +97,7 @@ public class AuthServiceImpl implements AuthService {
         settingRepository.save(setting);
        // userRepository.save(user);
        //userRepository.flush();
+
 
         return BaseMessage.builder()
                 .message("Registered Successfully")

@@ -143,12 +143,8 @@ public class QuotationServiceImpl implements QuotationService {
                     ir.setLineTotal(item.getLineTotal());
                     return ir;
                 }).toList();
-<<<<<<< HEAD
-        //res.setItems(items);
-=======
 
         res.setItems(items);
->>>>>>> eda84ea615a8ee3fa210b27dc98da2d6da6f940c
         return res;
     }
 }
