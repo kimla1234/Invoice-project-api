@@ -54,8 +54,8 @@ public class SettingServiceImpl implements SettingService {
                 setting.getSignatureUrl(),
 
                 setting.getCompanyName(),
-                setting.getCompanyPhoneNumber(),
                 setting.getCompanyEmail(),
+                setting.getCompanyPhoneNumber(),
                 setting.getCompanyAddress(),
                 setting.getCompanyLogoUrl()
         );
@@ -112,8 +112,8 @@ public class SettingServiceImpl implements SettingService {
                 saved.getSignatureUrl(),
 
                 saved.getCompanyName(),
-                saved.getCompanyPhoneNumber(),
                 saved.getCompanyEmail(),
+                saved.getCompanyPhoneNumber(),
                 saved.getCompanyAddress(),
                 saved.getCompanyLogoUrl()
         );
@@ -228,8 +228,8 @@ public class SettingServiceImpl implements SettingService {
                     setting.getInvoiceNote(),
                     fileUrl,
                     setting.getCompanyName(),
-                    setting.getCompanyPhoneNumber(),
                     setting.getCompanyEmail(),
+                    setting.getCompanyPhoneNumber(),
                     setting.getCompanyAddress(),
                     setting.getCompanyLogoUrl()
             );
