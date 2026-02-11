@@ -19,7 +19,10 @@ public class ProductType extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false)
     private String name;
+
     private Boolean status = true;
 
     // One type → many products
