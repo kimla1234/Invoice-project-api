@@ -11,4 +11,7 @@ public interface ProductTypeService {
     // Create a new type (linked to the user in the JWT)
     ProductTypeResponse createProductType(ProductTypeRequest request, Jwt jwt);
     List<ProductTypeResponse> getMyProductType (Jwt jwt);
+    ProductTypeResponse updateProductType(Long id, ProductTypeRequest request, Jwt jwt);
+
+    void deleteProductType(Long id, Jwt jwt);
 }

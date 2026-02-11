@@ -1,5 +1,6 @@
 package invoice.com.demo.features.products;
 
+import invoice.com.demo.base.BaseMessage;
 import invoice.com.demo.features.products.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -51,8 +52,19 @@ public class ProductController {
     // Product Type
 
     @PostMapping("/type")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ProductTypeResponse createProductType(@RequestBody ProductTypeRequest productTypeRequest , @AuthenticationPrincipal Jwt jwt) {
         return productTypeService.createProductType(productTypeRequest,jwt);
+    }
+
+    @GetMapping("/type")
+    public BaseMessage<List<ProductTypeResponse>> getMyProductTypes(@AuthenticationPrincipal Jwt jwt) {
+        List<ProductTypeResponse> productTypes = productTypeService.getMyProductType(jwt);
+
+        return BaseMessage.<List<ProductTypeResponse>>builder()
+                .message("Product types retrieved successfully")
+                .data(productTypes)
+                .build();
     }
 
 

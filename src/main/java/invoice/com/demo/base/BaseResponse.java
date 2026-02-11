@@ -9,5 +9,8 @@ import lombok.*;
 @Builder
 public class BaseResponse<T> {
     private Integer code;
-    private T description;
+    private T payload;
+    public static <T> BaseResponseBuilder<Object> builder() {
+        return new BaseResponseBuilder<>();
+    }
 }

@@ -3,6 +3,7 @@ package invoice.com.demo.features.users;
 import invoice.com.demo.domain.Setting;
 import invoice.com.demo.domain.User;
 import invoice.com.demo.features.settings.SettingRepository;
+import invoice.com.demo.features.users.dto.UpdateUserRequest;
 import invoice.com.demo.features.users.dto.UserResponse;
 import invoice.com.demo.mapper.userMapper;
 import jakarta.transaction.Transactional;
@@ -36,5 +37,34 @@ public class UserServiceImpl implements UserService {
                 ));
 
         return userMapper.mapFromUserToUserResponse(user);
+    }
+
+    @Override
+    public UserResponse updateProfile(Jwt jwt, UpdateUserRequest request) {
+        // 1. ទាញយក Email របស់ User ចេញពី Jwt Token
+        String email = jwt.getClaim("iss");
+
+        // 2. ស្វែងរក User ក្នុង Database បើមិនឃើញបោះ Error (ប្រើ Custom Exception របស់អ្នក)
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "រកមិនឃើញអ្នកប្រើប្រាស់នេះឡើយ"));
+
+        // 3. ធ្វើការ Update Fields (ឆែកមើលថាបើ Request បោះមកមិន Null ទើប Update)
+        if (request.name() != null) {
+            user.setName(request.name());
+        }
+
+        if (request.phone_number() != null) {
+            user.setPhone_number(request.phone_number());
+        }
+
+        if (request.image_profile() != null) {
+            user.setImage_profile(request.image_profile());
+        }
+
+        // 4. រក្សាទុកការផ្លាស់ប្តូរចូលក្នុង Database
+        User updatedUser = userRepository.save(user);
+
+        // 5. បំលែង Entity ទៅជា UserResponse រួចបោះទៅកាន់ Controller
+        return userMapper.toUserResponse(updatedUser);
     }
 }
