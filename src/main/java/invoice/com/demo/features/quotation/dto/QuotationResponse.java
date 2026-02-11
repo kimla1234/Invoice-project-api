@@ -2,6 +2,7 @@ package invoice.com.demo.features.quotation.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,8 +15,8 @@ public class QuotationResponse {
     private LocalDateTime quotationDate;
     private LocalDateTime quotationExpire;
 
-    private Double totalAmount;
-    private List<QuotationItemRequest> items;
+    private BigDecimal totalAmount;
+    private List<QuotationItemResponse> items;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

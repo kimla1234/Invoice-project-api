@@ -2,53 +2,124 @@ package invoice.com.demo.features.quotation;
 
 import invoice.com.demo.domain.Quotation;
 import invoice.com.demo.domain.QuotationItem;
-import invoice.com.demo.features.quotation.dto.QuotationCreateRequest;
-import invoice.com.demo.features.quotation.dto.QuotationItemRequest;
-import invoice.com.demo.features.quotation.dto.QuotationItemResponse;
-import invoice.com.demo.features.quotation.dto.QuotationResponse;
+import invoice.com.demo.features.quotation.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class QuotationServiceImpl implements QuotationService {
-    private final QuotationItemRepository quotationItemRepository;
+
+    private final QuotationRepository quotationRepository;
 
     @Override
     public QuotationResponse createQuotation(QuotationCreateRequest request) {
+
         Quotation quotation = new Quotation();
         quotation.setUserId(request.getUserId());
         quotation.setClientId(request.getClientId());
         quotation.setInvoiceId(request.getInvoiceId());
         quotation.setQuotationDate(request.getQuotationDate());
         quotation.setQuotationExpire(request.getQuotationExpire());
-        quotation.setCreatedAt(LocalDateTime.now());
 
-        double totalAmount = 0;
+        BigDecimal totalAmount = BigDecimal.ZERO;
 
-        for (QuotationItemRequest itemRequest : request.getItems()) {
-            QuotationItem quotationItem = new QuotationItem();
-            quotationItem.setQuotation(quotation);
-            quotationItem.setProductId(itemRequest.getProductId());
-            quotationItem.setQuantity(itemRequest.getQuantity());
-            quotationItem.setUnitPrice(itemRequest.getUnitPrice());
+        for (QuotationItemRequest itemReq : request.getItems()) {
 
-            double lineTotal = itemRequest.getQuantity() * itemRequest.getUnitPrice();
-            itemRequest.setLineTotal(lineTotal);
+            QuotationItem item = new QuotationItem();
+            item.setQuotation(quotation);
+            item.setProductId(itemReq.getProductId());
+            item.setQuantity(itemReq.getQuantity());
+            item.setUnitPrice(itemReq.getUnitPrice());
 
-            totalAmount += lineTotal;
-            quotation.getItem().add(quotationItem);
+            BigDecimal lineTotal =
+                    itemReq.getUnitPrice().multiply(
+                            BigDecimal.valueOf(itemReq.getQuantity())
+                    );
+
+            item.setLineTotal(lineTotal);
+            totalAmount = totalAmount.add(lineTotal);
+
+            quotation.getItems().add(item);
         }
+
         quotation.setTotalAmount(totalAmount);
+
+        quotationRepository.save(quotation);
+
         return mapToResponse(quotation);
     }
 
+    @Override
+    public QuotationResponse updateQuotation(QuotationUpdateRequest request) {
 
+        Quotation quotation = quotationRepository.findById(request.getId())
+                .orElseThrow(() -> new RuntimeException("Quotation not found"));
+
+        quotation.setUserId(request.getUserId());
+        quotation.setClientId(request.getClientId());
+        quotation.setQuotationDate(request.getQuotationDate());
+        quotation.setQuotationExpire(request.getQuotationExpire());
+
+        quotation.getItems().clear();
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (QuotationItemUpdateRequest itemReq : request.getItems()) {
+
+            QuotationItem item = new QuotationItem();
+            item.setQuotation(quotation);
+            item.setProductId(itemReq.getProductId());
+            item.setQuantity(itemReq.getQuantity());
+            item.setUnitPrice(itemReq.getUnitPrice());
+
+            BigDecimal lineTotal =
+                    itemReq.getUnitPrice().multiply(
+                            BigDecimal.valueOf(itemReq.getQuantity())
+                    );
+
+            item.setLineTotal(lineTotal);
+            totalAmount = totalAmount.add(lineTotal);
+
+            quotation.getItems().add(item);
+        }
+
+        quotation.setTotalAmount(totalAmount);
+
+        quotationRepository.save(quotation);
+
+        return mapToResponse(quotation);
+    }
+
+    @Override
+    public QuotationResponse getById(Long id) {
+        Quotation quotation = quotationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Quotation not found"));
+
+        return mapToResponse(quotation);
+    }
+
+    @Override
+    public List<QuotationResponse> getAllQuotations() {
+        return quotationRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        quotationRepository.deleteById(id);
+    }
+
+    /* =========================
+       MAPPER
+       ========================= */
     private QuotationResponse mapToResponse(Quotation quotation) {
 
         QuotationResponse res = new QuotationResponse();
@@ -62,39 +133,18 @@ public class QuotationServiceImpl implements QuotationService {
         res.setCreatedAt(quotation.getCreatedAt());
         res.setUpdatedAt(quotation.getUpdatedAt());
 
-        List<QuotationItemResponse> items = quotation.getItem().stream()
+        List<QuotationItemResponse> items = quotation.getItems().stream()
                 .map(item -> {
                     QuotationItemResponse ir = new QuotationItemResponse();
                     ir.setId(item.getId());
-                    ir.setQuotationId(quotation.getId());
                     ir.setProductId(item.getProductId());
                     ir.setQuantity(item.getQuantity());
                     ir.setUnitPrice(item.getUnitPrice());
                     ir.setLineTotal(item.getLineTotal());
                     return ir;
                 }).toList();
+
         res.setItems(items);
         return res;
-    }
-
-
-    @Override
-    public QuotationResponse updateQuotation(QuotationItemRequest request) {
-        return null;
-    }
-
-    @Override
-    public QuotationResponse getById(Long id) {
-        return null;
-    }
-
-    @Override
-    public List<QuotationResponse> getAllQuotations() {
-        return List.of();
-    }
-
-    @Override
-    public void deleteById(Long id) {
-
     }
 }
