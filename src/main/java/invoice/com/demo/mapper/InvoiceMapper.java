@@ -12,6 +12,8 @@ public interface InvoiceMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "client.id", target = "clientId")
     @Mapping(source = "items", target = "items")  // This will now use InvoiceItemMapper
+    @Mapping(source = "issueDate", target = "issueDate")  // This will now use InvoiceItemMapper
+    @Mapping(source = "expireDate", target = "expireDate")  // This will now use InvoiceItemMapper
     InvoiceResponse toResponse(Invoice invoice);
 
     @Mapping(target = "id", ignore = true)

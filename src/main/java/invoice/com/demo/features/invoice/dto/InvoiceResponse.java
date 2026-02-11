@@ -14,6 +14,8 @@ public record InvoiceResponse (
         double subtotal,
         double grandTotal,
         double tax,
+        LocalDateTime issueDate,
+        LocalDateTime expireDate,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         List<InvoiceItemResponse> items
