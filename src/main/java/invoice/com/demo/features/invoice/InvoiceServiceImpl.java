@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,6 +42,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceItemRepository invoiceItemRepository;
     private final ProductRepository productRepository;
     private final ProductService productService;
+
 
     @Override
     @Transactional
@@ -106,15 +110,21 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (!invoice.getClient().getId().equals(request.clientId())) {
             Client client = clientRepository.findById(request.clientId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+
+
             invoice.setClient(client);
         }
 
         // Update invoice fields
+        LocalDateTime issueDate = LocalDate.parse(request.issueDate()).atStartOfDay();
+        LocalDateTime expireDate = LocalDate.parse(request.expireDate()).atStartOfDay();
+
         invoice.setSubtotal(request.subtotal());
         invoice.setTax(request.tax());
         invoice.setGrandTotal(request.grandTotal());
         invoice.setStatus(request.status());
-
+        invoice.setIssueDate(issueDate);
+        invoice.setExpireDate(expireDate);
         // Update items - remove old items and add new ones
         invoice.getItems().clear();
 
@@ -205,4 +215,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return userRepository.findByEmail(userIdentifier)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
+
+
+
 }

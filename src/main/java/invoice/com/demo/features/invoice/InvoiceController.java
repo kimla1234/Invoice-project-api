@@ -44,8 +44,7 @@ public class InvoiceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InvoiceResponse> update(@PathVariable Long id,
-                                  @RequestBody InvoiceRequest request) {
+    public ResponseEntity<InvoiceResponse> update(@PathVariable Long id,@RequestBody InvoiceRequest request) {
         return invoiceService.update(id, request);
     }
 

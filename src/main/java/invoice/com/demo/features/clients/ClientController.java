@@ -21,7 +21,6 @@ public class ClientController {
         ClientResponse client = clientService.createClient(request);
         return Map.of("message", "Client created successfully", "data", client);
     }
-
     @PutMapping("/{id}")
     public Map<String, Object> updateClient(@PathVariable Long id, @Valid @RequestBody ClientUpdateRequest request){
         ClientResponse client = clientService.updateClient(id, request);
