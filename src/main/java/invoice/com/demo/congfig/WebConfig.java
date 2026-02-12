@@ -13,10 +13,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // This maps http://localhost:8081/media/IMAGE/your-file.jpg
-        // to the physical folder on your computer
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:uploads/");
+        // Ensure the path ends with a slash and starts with 'file:'
+        String location = serverPath.endsWith("/") ? "file:" + serverPath : "file:" + serverPath + "/";
+        registry.addResourceHandler("/media/**")
+                .addResourceLocations(location);
     }
 
     @Override
