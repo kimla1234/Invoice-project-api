@@ -6,8 +6,8 @@ public record SettingUpdateRequest(
         String signatureUrl,
 
         String companyName,
-        String companyPhoneNumber,
         String companyEmail,
+        String companyPhoneNumber,
         String companyAddress,
         String companyLogoUrl
 ) {
