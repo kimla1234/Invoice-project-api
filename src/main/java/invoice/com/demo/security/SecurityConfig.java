@@ -40,7 +40,7 @@ public class SecurityConfig {
     private final KeyUtil keyUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oauth2SuccessHandler;
-    // ប្រើ Constructor រួមជាមួយ @Lazy សម្រាប់ SuccessHandler
+
     public SecurityConfig(UserDetailsService userDetailsService,
                           PasswordEncoder passwordEncoder,
                           KeyUtil keyUtil,

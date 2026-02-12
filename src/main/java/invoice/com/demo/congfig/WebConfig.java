@@ -22,10 +22,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000") // ដាក់ឈ្មោះ Domain ឱ្យចំ
+                .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .allowCredentials(true); // បើគ្មានបន្ទាត់នេះទេ នឹងជាប់ CORS និង 401 រហូត
+                .allowCredentials(true);
     }
 
 }
