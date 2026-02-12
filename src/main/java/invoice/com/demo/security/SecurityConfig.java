@@ -88,10 +88,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH,"/api/v1/users/**").hasAnyAuthority("SCOPE_admin:write","SCOPE_user:write")
                         .requestMatchers(HttpMethod.PUT,"/api/v1/users/**").hasAuthority("SCOPE_admin:write")
 
-                        .requestMatchers(HttpMethod.POST, "/v1/search/dataImport").hasAuthority("SCOPE_admin:write")
-                        .requestMatchers("/v1/media/**").hasAnyAuthority("SCOPE_admin:write", "SCOPE_user:write")
-                        .requestMatchers("/v1/video/**").permitAll()
-
                         .anyRequest().authenticated()
                 )
         .oauth2Login(oauth2 -> oauth2
