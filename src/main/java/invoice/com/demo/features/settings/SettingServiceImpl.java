@@ -129,12 +129,12 @@ public class SettingServiceImpl implements SettingService {
             user.setName(request.name());
         }
 
-        if (request.phoneNumber() != null) {
-            user.setPhone_number(request.phoneNumber());
+        if (request.phone_number() != null) {
+            user.setPhone_number(request.phone_number());
         }
 
-        if (request.imageProfile() != null) {
-            user.setImage_profile(request.imageProfile());
+        if (request.image_profile() != null) {
+            user.setImage_profile(request.image_profile());
         }
 
         User saved = userRepository.save(user);

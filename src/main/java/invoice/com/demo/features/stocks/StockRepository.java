@@ -13,5 +13,5 @@ import java.util.UUID;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stocks , Long> {
-    List<MovementDto> findByProduct(Product product);
+    Optional<Stocks> findByProduct(Product product);
 }

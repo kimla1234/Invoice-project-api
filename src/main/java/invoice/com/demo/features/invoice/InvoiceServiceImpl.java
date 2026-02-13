@@ -5,10 +5,15 @@ import invoice.com.demo.features.clients.ClientRepository;
 import invoice.com.demo.features.invoice.dto.InvoiceRequest;
 import invoice.com.demo.features.invoice.dto.InvoiceResponse;
 import invoice.com.demo.features.invoiceitems.InvoiceItemRepository;
+import invoice.com.demo.features.invoiceitems.InvoiceItemService;
 import invoice.com.demo.features.invoiceitems.dto.InvoiceItemRequest;
 import invoice.com.demo.features.products.ProductRepository;
 import invoice.com.demo.features.products.ProductService;
+import invoice.com.demo.features.stocks.StockMovementRepository;
+import invoice.com.demo.features.stocks.StockRepository;
+import invoice.com.demo.features.stocks.StocksRepository;
 import invoice.com.demo.features.users.UserRepository;
+import invoice.com.demo.features.users.UserService;
 import invoice.com.demo.mapper.InvoiceItemMapper;
 import invoice.com.demo.mapper.InvoiceMapper;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +46,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final UserRepository userRepository;
     private final InvoiceItemRepository invoiceItemRepository;
     private final ProductRepository productRepository;
-    private final ProductService productService;
+    private final StockMovementRepository  stockMovementRepository;
+    private final StockRepository stockRepository;
 
 
     @Override
@@ -55,6 +61,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setClient(client);
         invoice.setUser(user);
         invoice.setStatus("pending");
+
 
         // Add items
         if (request.items() != null) {
@@ -70,10 +77,40 @@ public class InvoiceServiceImpl implements InvoiceService {
                 item.setSubtotal(itemDto.subtotal());
                 item.setName(product.getName());
                 invoice.addItem(item);  // Use helper
+
+
+
+            }
+        }
+        Invoice saved = invoiceRepository.save(invoice);
+
+        if (request.items() != null) {
+            for (InvoiceItemRequest itemDto : request.items()) {
+                Product product = productRepository.findById(itemDto.productId().toString()).get();
+
+                Stocks stock = stockRepository.findByProduct(product)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Stock not found for product: " + product.getName()));
+
+                if (stock.getQuantity() < itemDto.quantity()) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient stock for: " + product.getName());
+                }
+
+                stock.setQuantity(stock.getQuantity() - (int) itemDto.quantity());
+                stockRepository.save(stock); //  Save Stocks Entity
+
+                StockMovements movement = new StockMovements();
+                movement.setProduct(product);
+                movement.setType(StockType.OUT);
+                movement.setQuantity((int) itemDto.quantity());
+                movement.setNote("Sold via Invoice By: " + saved.getClient().getName());
+                movement.setCreatedBy(user.getId());
+
+                stockMovementRepository.save(movement); //  Save StockMovements Entity
+
             }
         }
 
-        Invoice saved = invoiceRepository.save(invoice);
+        //Invoice saved = invoiceRepository.save(invoice);
         return ResponseEntity.ok(invoiceMapper.toResponse(saved));
     }
 
@@ -105,6 +142,62 @@ public class InvoiceServiceImpl implements InvoiceService {
     public ResponseEntity<InvoiceResponse> update(Long id, InvoiceRequest request) {
         Invoice invoice = invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invoice not found"));
+
+        String oldStatus = invoice.getStatus();
+        String newStatus = request.status();
+        // --- STOCK LOGIC START ---
+
+        // Case 1: Changing TO "cancelled" (Restoring Stock)
+        if (!oldStatus.equalsIgnoreCase("cancelled") && newStatus.equalsIgnoreCase("cancelled")) {
+            for (InvoiceItem item : invoice.getItems()) {
+                Product product = item.getProduct();
+                Stocks stock = product.getStock();
+
+                if (stock != null) {
+                    // 1. Update numeric stock value
+                    double newQty = stock.getQuantity() + item.getQuantity();
+                    stock.setQuantity((int) newQty);
+                    stockRepository.save(stock);
+
+                    // 2. Record Stock Movement (IN)
+                    StockMovements movement = new StockMovements();
+                    movement.setProduct(product);
+                    movement.setType(StockType.IN); // Stock is coming back
+                    movement.setQuantity((int) item.getQuantity());
+                    movement.setNote("Stock Restored - Invoice #" + id  + " Cancelled");
+                    stockMovementRepository.save(movement);
+                }
+            }
+        }
+
+// Case 2: Changing FROM "cancelled" to something else (Deducting Stock)
+        else if (oldStatus.equalsIgnoreCase("cancelled") && !newStatus.equalsIgnoreCase("cancelled")) {
+            for (InvoiceItem item : invoice.getItems()) {
+                Product product = item.getProduct();
+                Stocks stock = product.getStock();
+
+                if (stock != null) {
+                    if (stock.getQuantity() < item.getQuantity()) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Insufficient stock to restore Invoice #" + id);
+                    }
+
+                    // 1. Update numeric stock value
+                    double newQty = stock.getQuantity() - item.getQuantity();
+                    stock.setQuantity((int) newQty);
+                    stockRepository.save(stock);
+
+                    // 2. Record Stock Movement (OUT)
+                    StockMovements movement = new StockMovements();
+                    movement.setProduct(product);
+                    movement.setType(StockType.OUT); // Stock is going out again
+                    movement.setQuantity((int) item.getQuantity());
+                    movement.setNote("Stock Deducted - Invoice #" + id + " Re-activated");
+                    stockMovementRepository.save(movement);
+                }
+            }
+        }
+        // --- STOCK LOGIC END ---
 
         // Update client if changed
         if (!invoice.getClient().getId().equals(request.clientId())) {

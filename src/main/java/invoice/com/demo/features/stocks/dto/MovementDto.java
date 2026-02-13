@@ -7,6 +7,7 @@ public record MovementDto(
         String type,
         int quantity,
         String note,
+        Long createdBy,
         LocalDateTime created_at
 ) {
 }

@@ -35,7 +35,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String refreshToken = authResponse.refreshToken();
 
         // Frontend
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/auth/google/callback")
+        String targetUrl = UriComponentsBuilder.fromUriString("https://invoice.ui.kimla.online/auth/google/callback")
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)
                 .build().toUriString();

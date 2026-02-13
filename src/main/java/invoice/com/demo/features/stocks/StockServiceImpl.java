@@ -69,6 +69,7 @@ public class StockServiceImpl implements StockService {
                         m.getType().name(),
                         m.getQuantity(),
                         m.getNote(),
+                        m.getCreatedBy(),
                         m.getCreatedAt()
                 ))
                 .toList();
@@ -94,6 +95,7 @@ public class StockServiceImpl implements StockService {
                         m.getType().name(),
                         m.getQuantity(),
                         m.getNote(),
+                        m.getCreatedBy(),
                         m.getCreatedAt()
                 ))
                 .toList();

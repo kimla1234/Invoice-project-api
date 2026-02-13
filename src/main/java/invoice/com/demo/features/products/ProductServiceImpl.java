@@ -89,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
         stocksRepository.save(stock);
 
         savedProduct.setStock(stock);
-        // ៣. ឆែក Status ដោយស្វ័យប្រវត្តិ
+        //  Status
         product.updateStatusFromStock();
 
         return productMapper.toResponse(savedProduct);
