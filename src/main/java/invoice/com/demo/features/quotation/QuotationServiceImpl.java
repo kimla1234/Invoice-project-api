@@ -24,6 +24,7 @@ public class QuotationServiceImpl implements QuotationService {
         quotation.setUserId(request.getUserId());
         quotation.setClientId(request.getClientId());
         quotation.setInvoiceId(request.getInvoiceId());
+        quotation.setQuotationNo(request.getQuotationNo());
         quotation.setQuotationDate(request.getQuotationDate());
         quotation.setQuotationExpire(request.getQuotationExpire());
 
@@ -143,12 +144,7 @@ public class QuotationServiceImpl implements QuotationService {
                     ir.setLineTotal(item.getLineTotal());
                     return ir;
                 }).toList();
-<<<<<<< HEAD
-        //res.setItems(items);
-=======
-
         res.setItems(items);
->>>>>>> eda84ea615a8ee3fa210b27dc98da2d6da6f940c
         return res;
     }
 }

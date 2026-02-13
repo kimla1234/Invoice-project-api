@@ -10,6 +10,7 @@ public class QuotationCreateRequest {
     private Long userId;
     private Long clientId;
     private Long invoiceId;
+    private Long quotationNo;
     private LocalDateTime quotationDate;
     private LocalDateTime quotationExpire;
 
