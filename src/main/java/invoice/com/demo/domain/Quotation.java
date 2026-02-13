@@ -30,6 +30,9 @@ public class Quotation {
     @Column(name = "invoice_id")
     private Long invoiceId;
 
+    @Column(name = "quotation_no")
+    private Long quotationNo;
+
     @Column(name = "quotation_date")
     private LocalDateTime quotationDate;
 

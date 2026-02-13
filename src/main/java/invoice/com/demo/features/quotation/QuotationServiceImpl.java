@@ -24,6 +24,7 @@ public class QuotationServiceImpl implements QuotationService {
         quotation.setUserId(request.getUserId());
         quotation.setClientId(request.getClientId());
         quotation.setInvoiceId(request.getInvoiceId());
+        quotation.setQuotationNo(request.getQuotationNo());
         quotation.setQuotationDate(request.getQuotationDate());
         quotation.setQuotationExpire(request.getQuotationExpire());
 
