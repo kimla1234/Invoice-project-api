@@ -59,6 +59,10 @@ public class Quotation {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Enumerated(EnumType.STRING)
+    private QuotationStatus status = QuotationStatus.PENDING;
+
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

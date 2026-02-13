@@ -2,6 +2,7 @@ package invoice.com.demo.features.quotation;
 
 import invoice.com.demo.domain.Quotation;
 import invoice.com.demo.domain.QuotationItem;
+import invoice.com.demo.domain.QuotationStatus;
 import invoice.com.demo.features.quotation.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.List;
 public class QuotationServiceImpl implements QuotationService {
 
     private final QuotationRepository quotationRepository;
+    private QuotationStatus status;
 
     @Override
     public QuotationResponse createQuotation(QuotationCreateRequest request) {
@@ -49,6 +51,10 @@ public class QuotationServiceImpl implements QuotationService {
             quotation.getItems().add(item);
         }
 
+        if (this.status == null) {
+            this.status = QuotationStatus.PENDING;
+        }
+
         quotation.setTotalAmount(totalAmount);
 
         quotationRepository.save(quotation);
@@ -66,7 +72,7 @@ public class QuotationServiceImpl implements QuotationService {
         quotation.setClientId(request.getClientId());
         quotation.setQuotationDate(request.getQuotationDate());
         quotation.setQuotationExpire(request.getQuotationExpire());
-
+        quotation.setStatus(request.getStatus());
         quotation.getItems().clear();
 
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -113,6 +119,8 @@ public class QuotationServiceImpl implements QuotationService {
                 .toList();
     }
 
+
+
     @Override
     public void deleteById(Long id) {
         quotationRepository.deleteById(id);
@@ -133,12 +141,14 @@ public class QuotationServiceImpl implements QuotationService {
         res.setTotalAmount(quotation.getTotalAmount());
         res.setCreatedAt(quotation.getCreatedAt());
         res.setUpdatedAt(quotation.getUpdatedAt());
+        res.setStatus(quotation.getStatus());
 
         List<QuotationItemResponse> items = quotation.getItems().stream()
                 .map(item -> {
                     QuotationItemResponse ir = new QuotationItemResponse();
                     ir.setId(item.getId());
                     ir.setProductId(item.getProductId());
+                    ir.setProductName(item.getProductName());
                     ir.setQuantity(item.getQuantity());
                     ir.setUnitPrice(item.getUnitPrice());
                     ir.setLineTotal(item.getLineTotal());

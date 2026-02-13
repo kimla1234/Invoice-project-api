@@ -26,6 +26,10 @@ public class QuotationItem {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
+
+
+    private String productName;
+
     @Column(nullable = false)
     private Integer quantity;
 
@@ -61,4 +65,6 @@ public class QuotationItem {
             this.lineTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
         }
     }
+
+
 }

@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product , String> {
     List<Product> findByUserAndIsDeletedFalse(User user);
     Optional<Product> findByUuid(String uuid);
+    Optional<Product> findById(Long id);
+
 }

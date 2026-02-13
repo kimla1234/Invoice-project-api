@@ -20,7 +20,7 @@ public class QuotationController {
         return quotationService.createQuotation(request);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public QuotationResponse update(
             @PathVariable Long id,
             @RequestBody QuotationUpdateRequest request

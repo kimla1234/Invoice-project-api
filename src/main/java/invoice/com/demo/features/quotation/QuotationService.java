@@ -17,4 +17,5 @@ public interface QuotationService {
     List<QuotationResponse> getAllQuotations();
 
     void deleteById(Long id);
+
 }

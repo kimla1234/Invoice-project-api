@@ -41,7 +41,16 @@ public class ProductController {
     @GetMapping("/{uuid}")
     public ProductResponse getProduct(@PathVariable String uuid) {
         return productService.getProductByUuid(uuid);
+
     }
+
+    @GetMapping("/by/{id}")
+    public ProductResponse getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+
+    }
+
+
 
     @PatchMapping("/{uuid}")
     public ProductResponse updateProduct(@PathVariable String uuid, @RequestBody ProductUpdateRequest productUpdateRequest) {
