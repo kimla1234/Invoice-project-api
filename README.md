@@ -220,7 +220,7 @@ GOOGLE_CLIENT_SECRET=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
    - dev  : for development  test in localhost
    - prod : for production with hosting databse , file uplaod 
 
-![Run/Debug configurations](./src/main/resources/static/Screenshot.png)
+![Run/Debug configurations](./src/main/resources/Screenshot.png)
 
 3. Run project
 
