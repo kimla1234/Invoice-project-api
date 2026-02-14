@@ -25,7 +25,7 @@ we have created a postman collection for you to test the API endpoints. You can 
   - [🎥 Client](#-client)
   - [📜 Product](#-product)
   - [🗂️ Stock](#️-stock)
-  - [🔖 Settings & Profile API](#-settings & Profile API)
+  - [🔖 Settings](#-settings)
 - [📋 Examples](#-examples)
 - [🛠️ Troubleshooting](#️-troubleshooting)
 - [👥 Contributors](#-contributors)
@@ -36,7 +36,7 @@ To use the Invoice API, you need to have an active instance of the Inovice servi
 
 ## 🚀 Usage
 
-The Invoice API uses RESTful principles and supports standard HTTP methods such as GET, POST, PUT, PATCH, and DELETE. All endpoints require the base URL ` https://invoice.kimla.online/`, which should be replaced with the actual base URL of your Invoice instance. We will provide you with the Postman Collection and Environment to get started. [IFinder Postman Collection](https://red-space-973450.postman.co/workspace/iFinder-Search-Engine~8db9cd82-49bc-4d36-b73c-d17813c5658c/collection/28112071-01d166e1-6978-4835-8f58-49765cd73d2c?action=share&source=collection_link&creator=28112071)
+The Invoice API uses RESTful principles and supports standard HTTP methods such as GET, POST, PUT, PATCH, and DELETE. All endpoints require the base URL ` https://invoice.kimla.online/`, which should be replaced with the actual base URL of your Invoice instance. We will provide you with the Postman Collection and Environment to get started. [Inoive Postman Collection](https://drive.google.com/drive/folders/1QjYMpGNVoP7_Zkzo_Fz93ziMHhO5g0IE?usp=sharing)
 
 ## 📬 Endpoints
 
@@ -116,7 +116,7 @@ The Invoice API uses RESTful principles and supports standard HTTP methods such 
 | Get Movement History       | GET | `/api/v1/stock/movement/{uuid}`                                             | Retrieves a list of all stock movements for a specific product UUID.    |
 
 
-###  Settings & Profile API
+###  Settings
 
 | Endpoint            | Method | URL                                                        | Description |
 |---------------------|--------|------------------------------------------------------------|-------------|
@@ -129,11 +129,11 @@ The Invoice API uses RESTful principles and supports standard HTTP methods such 
 
 ## 📋 Examples
 
-For detailed examples on how to use the API endpoints, please refer to the provided Postman collection link: [IFinder Postman Collection](https://red-space-973450.postman.co/workspace/iFinder-Search-Engine~8db9cd82-49bc-4d36-b73c-d17813c5658c/collection/28112071-01d166e1-6978-4835-8f58-49765cd73d2c?action=share&source=collection_link&creator=28112071)
+For detailed examples on how to use the API endpoints, please refer to the provided Postman collection link: [Inoive Postman Collection](https://drive.google.com/drive/folders/1QjYMpGNVoP7_Zkzo_Fz93ziMHhO5g0IE?usp=sharing)
 
 ## 🛠️ Troubleshooting
 
-If you encounter issues while using the IFinder API, consider the following steps:
+If you encounter issues while using the Invoice API, consider the following steps:
 - Ensure your request URLs are correct and the base URL is properly set.
 - Check your tokens for validity and expiration.
 - Verify the request body and headers match the expected format.
@@ -141,5 +141,5 @@ If you encounter issues while using the IFinder API, consider the following step
 
 ## 👥 Contributors
 
-- IFinder Team
-- ISTAD Institute of Science and Technology Advanced Development
+- Invoice Team
+- ADITI & Wing Bank 
