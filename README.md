@@ -126,10 +126,142 @@ The Invoice API uses RESTful principles and supports standard HTTP methods such 
 | Update my User Profile     | PATCH    | `/api/v1/setting/profile`                                         | Updates user profile information (name, contact info, etc.). |
 | Change password | PATCH  | `/api/v1/setting/password`                                         | Retrieves a bookmark based on the provided UUID. |
 
+## How test api 
+
+1. Download/fork/clone the repo and Once you're in the correct directory, it's time to install all the necessary dependencies. You can do this by typing the following command:
+
+```
+git clone https://github.com/kimla1234/Invoice-project-api
+```
+Check src/main/resources  we have  : 
+
+- application.properties 
+```
+spring.application.name=demo
+server.port=8081
+
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+
+
+keys.access-private-token=keys/access-private
+keys.access-public-token=keys/access-public
+keys.refresh-public-token=keys/refresh-public
+keys.refresh-private-token=keys/refresh-private
+
+
+
+#media configuration
+media.server-path=${MEDIA_SERVER_PATH}
+media.client-path=/media/**
+media.base-uri=${MEDIA_BASE_URI}
+
+
+
+#file upload configuration
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=20MB
+spring.servlet.multipart.max-request-size=20MB
+
+# Google OAuth2 Configuration
+spring.security.oauth2.client.registration.google.client-id=${GOOGLE_CLIENT_ID}
+spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET}
+spring.security.oauth2.client.registration.google.scope=email,profile
+spring.security.oauth2.client.registration.google.redirect-uri={baseUrl}/login/oauth2/code/google
+```
+- application-dev.properties  : for development 
+
+```
+DB_USERNAME=postgres
+DB_PASSWORD=123
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=invoice_project
+
+GOOGLE_CLIENT_ID=538842776548-0gtvfd20cp4udtb7a5c09khmkscmnvrm.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+
+#media configuration
+MEDIA_SERVER_PATH=/Users/macbook/Documents/ADITI School /final-project/server/
+MEDIA_BASE_URI=http://localhost:8081/media/
+
+```
+
+- application-prod.properties  : for production
+
+```
+
+DB_USERNAME=postgres
+DB_PASSWORD=Kimla110803
+DB_HOST=34.158.60.52
+DB_PORT=5432
+DB_NAME=invoice_project
+
+#media configuration
+MEDIA_SERVER_PATH=/file-upload/
+MEDIA_BASE_URI=https://invoice.kimla.online/media/
+
+GOOGLE_CLIENT_ID=538842776548-0gtvfd20cp4udtb7a5c09khmkscmnvrm.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+
+
+```
+
+2. Check your Run/Debug configurations
+   Active profile u can test :
+   - dev  : for development  test in localhost
+   - prod : for production with hosting databse , file uplaod 
+
+![Run/Debug configurations](./src/main/resources/static/RunDebug_configurations.png)
+
+3. Run project
+
+## How test api in postman 
+- u can download Postman collection link 👉 : [Inoive Postman Collection](https://drive.google.com/drive/folders/1QjYMpGNVoP7_Zkzo_Fz93ziMHhO5g0IE?usp=sharing)
+- import `Invoice.postman_collection.json` `Invoice project.postman_environment.json` in postman
+- select environment  ` Invoice project`
+
+## Project workflow test 
+1. Register or login
+2. Create client , project
+3. And than u can test create Quotation and Invoice now
+
+## Test File Upload 
+- `{{invoice_base_url_production}}/api/v1/media/upload-image`
+  => `body` => `form-data` => `key` : file , `type` : file  => upload your image in  `value` 
+  ````
+   {
+    "name": "4895c5a9-1b01-4507-8ee8-f0e6d27a44c9.jpg",
+    "contentType": "image/jpeg",
+    "uri": "https://invoice.kimla.online/media/IMAGE/4895c5a9-1b01-4507-8ee8-f0e6d27a44c9.jpg",
+    "size": 97814,
+    "extension": "jpg"
+    }
+  ````
+- Then you can take the uri and put it wherever you want to upload it. Example create product :
+  ```
+   {
+   "name": "Coca 01",
+    "image_url": "https://invoice.kimla.online/media/IMAGE/4895c5a9-1b01-4507-8ee8-f0e6d27a44c9.jpg",
+   "price": 1.25,
+   "productTypeId": 1,
+   "quantity": 500 
+   }
+  ```
+ 
 
 ## 📋 Examples
 
 For detailed examples on how to use the API endpoints, please refer to the provided Postman collection link: [Inoive Postman Collection](https://drive.google.com/drive/folders/1QjYMpGNVoP7_Zkzo_Fz93ziMHhO5g0IE?usp=sharing)
+
 
 ## 🛠️ Troubleshooting
 
